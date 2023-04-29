@@ -21,8 +21,8 @@ function setGame() {
             document.getElementsByClassName("board")[0].appendChild(tile);
         }
     }
-    setThree();
-    setThree();
+    setThree(true);
+    setThree(true);
 }
 
 function full() {
@@ -36,8 +36,11 @@ function full() {
     return true;
 }
 
-function setThree() {
+function setThree(movement) {
     if (full()) {
+        return;
+    }
+    if (!movement) {
         return;
     }
     let found = false;
@@ -67,21 +70,22 @@ function updateTile(tile, num) {
 
 document.addEventListener("keyup", (e) => {
     if (e.code == "ArrowLeft") {
-        slideLeft();
-        setThree();
+        let m = slideLeft();
+        setThree(m);
     } else if (e.code == "ArrowRight") {
-        slideRight();
-        setThree();
+        let m = slideRight();
+        setThree(m);
     } else if (e.code == "ArrowUp") {
-        slideUp();
-        setThree();
+        let m = slideUp();
+        setThree(m);
     } else if (e.code == "ArrowDown") {
-        slideDown();
-        setThree();
+        let m = slideDown();
+        setThree(m);
     }
 })
 
 function removeZerosLeftUp(arr) {
+    let changes = false;
     let nonZeros = []
     for (let i = 0; i < columns; i++) {
         if (arr[i] !== 0) {
@@ -91,19 +95,30 @@ function removeZerosLeftUp(arr) {
     let len = nonZeros.length;
     for (let i = 0; i < columns; i++) {
         if (i >= len) {
+            if (arr[i] !== 0) {
+                changes = true;
+            }
             arr[i] = 0;
         } else {
+            if (arr[i] !== nonZeros[i]) {
+                changes = true;
+            }
             arr[i] = nonZeros[i];
         }
     }
-    return arr;
+    return changes;
 }
 
 function slideLeft() {
+    let movement = false;
     for (let r = 0; r < rows; r++) {
-        removeZerosLeftUp(board[r]);
+        movement = movement || removeZerosLeftUp(board[r]);
         for (let c = 0; c < columns - 1; c++) {
+            if (board[r][c] == 0) {
+                break;
+            }
             if (board[r][c] == board[r][c + 1]) {
+                movement = true;
                 board[r][c] *= 3;
                 board[r][c + 1] = 0;
                 c++;
@@ -115,9 +130,11 @@ function slideLeft() {
             updateTile(tile, board[r][c]);
         }
     }
+    return movement;
 }
 
 function removeZerosRightDown(arr) {
+    let changes = false;
     let nonZeros = []
     for (let i = 0; i < columns; i++) {
         if (arr[i] !== 0) {
@@ -128,20 +145,31 @@ function removeZerosRightDown(arr) {
     let index = 0;
     for (let i = 0; i < columns; i++) {
         if (i < len) {
+            if (arr[i] !== 0) {
+                changes = true;
+            }
             arr[i] = 0;
         } else {
+            if (arr[i] !== nonZeros[index]) {
+                changes = true;
+            }
             arr[i] = nonZeros[index];
             index++;
         }
     }
-    return arr;
+    return changes;
 }
 
 function slideRight() {
+    let movement = false;
     for (let r = 0; r < rows; r++) {
-        removeZerosRightDown(board[r]);
+        movement = movement || removeZerosRightDown(board[r]);
         for (let c = columns - 1; c > 0; c--) {
+            if (board[r][c] == 0) {
+                break;
+            }
             if (board[r][c] == board[r][c - 1]) {
+                movement = true;
                 board[r][c] *= 3;
                 board[r][c - 1] = 0;
                 c--;
@@ -153,17 +181,23 @@ function slideRight() {
             updateTile(tile, board[r][c]);
         }
     }
+    return movement;
 }
 
 function slideUp() {
+    let movement = false;
     for (let c = 0; c < columns; c++) {
         let colArr = [];
         for (let r = 0; r < rows; r++) {
             colArr.push(board[r][c]);
         }
-        removeZerosLeftUp(colArr);
+        movement = movement || removeZerosLeftUp(colArr);
         for (let r = 0; r < rows - 1; r++) {
+            if (colArr[r] == 0) {
+                break;
+            }
             if (colArr[r] == colArr[r + 1]) {
+                movement = true;
                 colArr[r] *= 3;
                 colArr[r + 1] = 0;
                 r++;
@@ -176,17 +210,23 @@ function slideUp() {
             updateTile(tile, board[r][c]);
         }
     }
+    return movement;
 }
 
 function slideDown() {
+    let movement = false;
     for (let c = 0; c < columns; c++) {
         let colArr = [];
         for (let r = 0; r < rows; r++) {
             colArr.push(board[r][c]);
         }
-        removeZerosRightDown(colArr);
+        movement = movement || removeZerosRightDown(colArr);
         for (let r = rows - 1; r > 0; r--) {
+            if (colArr[r] == 0) {
+                break;
+            }
             if (colArr[r] == colArr[r - 1]) {
+                movement = true;
                 colArr[r] *= 3;
                 colArr[r - 1] = 0;
                 r--;
@@ -199,4 +239,5 @@ function slideDown() {
             updateTile(tile, board[r][c]);
         }
     }
+    return movement;
 }
