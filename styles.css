@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: rgb(193, 202, 215);
+    font-family: 'Cabin', sans-serif;
+}
+
+.header {
+    width: 100vw;
+    height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: rgba(77, 96, 172, 0.4);
+}
+
+.title {
+    font-size: 4rem;
+    padding-bottom: 1rem;
+    background: none;
+    color: rgb(5, 5, 72);
+}
+
+.subtitle, .subtitle span {
+    font-size: 1.8rem;
+    background: none;
+    color: rgb(30, 29, 29);
+    font-weight: bold;
+    font-weight: 100;
+}
+
+.board-container {
+    width: 100vw;
+    height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board {
+    height: 62vh;
+    width: 62vh;
+    background: rgb(221, 227, 230);
+    border-radius: 1rem;
+    border: 1vh solid rgb(5, 5, 72);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tile {
+    width: 15vh;
+    height: 15vh;
+    border-radius: 1rem;
+    border: 2px solid rgb(221, 227, 230);
+    background: rgba(77, 96, 172, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: rgb(5, 5, 72);
+}
+
+.t3 {
+    background: rgb(220, 224, 229);
+    color: rgb(5, 5, 72);
+}
+
+.t9 {
+    background: rgb(199, 206, 227);
+    color: black;
+}
+
+.t27 {
+    background: rgb(45, 66, 127);
+    color: rgb(160, 167, 176);
+}
+
+.t81 {
+    background: rgb(2, 11, 41);
+    color: rgb(201, 205, 210);
+}
+
+.t243 {
+    background: rgb(81, 15, 132);
+    color: rgb(239, 238, 245);
+}
+
+.t729 {
+    background: rgb(36, 18, 198);
+    color: rgb(215, 199, 249);
+}
+
+.t2187 {
+    background: rgb(153, 152, 213);
+    color: rgb(7, 8, 34);
+}
+
+
