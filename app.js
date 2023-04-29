@@ -21,8 +21,8 @@ function setGame() {
             document.getElementsByClassName("board")[0].appendChild(tile);
         }
     }
-    setThree(true);
-    setThree(true);
+    setThreeOrNine(true);
+    setThreeOrNine(true);
 }
 
 function full() {
@@ -36,7 +36,7 @@ function full() {
     return true;
 }
 
-function setThree(movement) {
+function setThreeOrNine(movement) {
     if (full() || !movement) {
         return;
     }
@@ -44,10 +44,12 @@ function setThree(movement) {
     while (!found) {
         let r = Math.floor(Math.random() * rows);
         let c = Math.floor(Math.random() * columns);
+        let nums = [3, 9];
+        let num = nums[Math.floor(Math.random() * 2)];
         if (board[r][c] == 0) {
-            board[r][c] = 3;
+            board[r][c] = num;
             let tile = document.getElementById(r.toString() + "-" + c.toString());
-            updateTile(tile, 3);
+            updateTile(tile, num);
             found = true;
         }
     }
@@ -69,21 +71,48 @@ document.addEventListener("keyup", (e) => {
     if (e.code == "ArrowLeft") {
         let m = slideLeft();
         document.getElementsByClassName("score")[0].innerHTML = score.toString();
-        setThree(m);
+        setThreeOrNine(m);
     } else if (e.code == "ArrowRight") {
         let m = slideRight();
         document.getElementsByClassName("score")[0].innerHTML = score.toString();
-        setThree(m);
+        setThreeOrNine(m);
     } else if (e.code == "ArrowUp") {
         let m = slideUp();
         document.getElementsByClassName("score")[0].innerHTML = score.toString();
-        setThree(m);
+        setThreeOrNine(m);
     } else if (e.code == "ArrowDown") {
         let m = slideDown();
         document.getElementsByClassName("score")[0].innerHTML = score.toString();
-        setThree(m);
+        setThreeOrNine(m);
+    }
+    if(gameOver()) {
+        lose();
     }
 })
+
+function gameOver() {
+    if (!full()) {
+        return false;
+    }
+    for (let r = 0; r < rows - 1; r++) {
+        for (let c = 0; c < columns - 1; c++) {
+            if (board[r][c] == board[r][c + 1] || board[r][c] == board[r + 1][c]) {
+                return false;
+            }
+        }
+    }
+    for (let c = 0; c < columns - 1; c++) {
+        if (board[rows - 1][c] == board[rows - 1][c + 1]) {
+            return false;
+        }
+    }
+    for (let r = 0; r < rows - 1; r++) {
+        if (board[r][columns - 1] == board[r + 1][columns - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
 
 function removeZerosLeftUp(arr) {
     let changes = false;
@@ -113,6 +142,7 @@ function removeZerosLeftUp(arr) {
 
 function slideLeft() {
     let movement = false;
+    let final = false
     for (let r = 0; r < rows; r++) {
         movement = removeZerosLeftUp(board[r]) || movement;
         for (let c = 0; c < columns - 1; c++) {
@@ -121,8 +151,12 @@ function slideLeft() {
             }
             if (board[r][c] == board[r][c + 1]) {
                 movement = true;
-                score += board[r][c] * 3;
-                board[r][c] *= 3;
+                let triple = board[r][c] * 3
+                if (triple == 2187) {
+                    final = true;
+                }
+                score += triple;
+                board[r][c] = triple;
                 board[r][c + 1] = 0;
                 c++;
             }
@@ -132,6 +166,9 @@ function slideLeft() {
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             updateTile(tile, board[r][c]);
         }
+    }
+    if (final) {
+        win();
     }
     return movement;
 }
@@ -166,6 +203,7 @@ function removeZerosRightDown(arr) {
 
 function slideRight() {
     let movement = false;
+    let final = false
     for (let r = 0; r < rows; r++) {
         movement = removeZerosRightDown(board[r]) || movement;
         for (let c = columns - 1; c > 0; c--) {
@@ -174,8 +212,12 @@ function slideRight() {
             }
             if (board[r][c] == board[r][c - 1]) {
                 movement = true;
-                score += board[r][c] * 3;
-                board[r][c] *= 3;
+                let triple = board[r][c] * 3;
+                if (triple == 2187) {
+                    final = true;
+                }
+                score += triple;
+                board[r][c] = triple;
                 board[r][c - 1] = 0;
                 c--;
             }
@@ -186,11 +228,15 @@ function slideRight() {
             updateTile(tile, board[r][c]);
         }
     }
+    if (final) {
+        win();
+    }
     return movement;
 }
 
 function slideUp() {
     let movement = false;
+    let final = false;
     for (let c = 0; c < columns; c++) {
         let colArr = [];
         for (let r = 0; r < rows; r++) {
@@ -203,8 +249,12 @@ function slideUp() {
             }
             if (colArr[r] == colArr[r + 1]) {
                 movement = true;
-                score += colArr[r] * 3;
-                colArr[r] *= 3;
+                let triple = colArr[r] * 3
+                if (triple == 2187) {
+                    final = true;
+                }
+                score += triple;
+                colArr[r] = triple;
                 colArr[r + 1] = 0;
                 r++;
             }
@@ -216,11 +266,15 @@ function slideUp() {
             updateTile(tile, board[r][c]);
         }
     }
+    if (final) {
+        win();
+    }
     return movement;
 }
 
 function slideDown() {
     let movement = false;
+    let final = false;
     for (let c = 0; c < columns; c++) {
         let colArr = [];
         for (let r = 0; r < rows; r++) {
@@ -233,8 +287,12 @@ function slideDown() {
             }
             if (colArr[r] == colArr[r - 1]) {
                 movement = true;
-                score += colArr[r] * 3;
-                colArr[r] *= 3;
+                let triple = colArr[r] * 3
+                if (triple == 2187) {
+                    final = true;
+                }
+                score += triple;
+                colArr[r] = triple;
                 colArr[r - 1] = 0;
                 r--;
             }
@@ -246,5 +304,20 @@ function slideDown() {
             updateTile(tile, board[r][c]);
         }
     }
+    if (final) {
+        win();
+    }
     return movement;
+}
+
+function lose() {
+    setTimeout(() => {
+        window.location.replace('./lose.html');
+    }, 1000);
+}
+
+function win() {
+    setTimeout(() => {
+        window.location.replace('./win.html');
+    }, 1000);
 }
