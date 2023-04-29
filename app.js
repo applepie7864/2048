@@ -81,7 +81,7 @@ document.addEventListener("keyup", (e) => {
     }
 })
 
-function removeZerosLeft(arr) {
+function removeZerosLeftUp(arr) {
     let nonZeros = []
     for (let i = 0; i < columns; i++) {
         if (arr[i] !== 0) {
@@ -101,7 +101,7 @@ function removeZerosLeft(arr) {
 
 function slideLeft() {
     for (let r = 0; r < rows; r++) {
-        removeZerosLeft(board[r]);
+        removeZerosLeftUp(board[r]);
         for (let c = 0; c < columns - 1; c++) {
             if (board[r][c] == board[r][c + 1]) {
                 board[r][c] *= 3;
@@ -109,7 +109,7 @@ function slideLeft() {
                 c++;
             }
         }
-        removeZerosLeft(board[r]);
+        removeZerosLeftUp(board[r]);
         for (let c = 0; c < columns; c++) {
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             updateTile(tile, board[r][c]);
@@ -117,7 +117,7 @@ function slideLeft() {
     }
 }
 
-function removeZerosRight(arr) {
+function removeZerosRightDown(arr) {
     let nonZeros = []
     for (let i = 0; i < columns; i++) {
         if (arr[i] !== 0) {
@@ -139,7 +139,7 @@ function removeZerosRight(arr) {
 
 function slideRight() {
     for (let r = 0; r < rows; r++) {
-        removeZerosRight(board[r]);
+        removeZerosRightDown(board[r]);
         for (let c = columns - 1; c > 0; c--) {
             if (board[r][c] == board[r][c - 1]) {
                 board[r][c] *= 3;
@@ -147,7 +147,7 @@ function slideRight() {
                 c--;
             }
         }
-        removeZerosRight(board[r]);
+        removeZerosRightDown(board[r]);
         for (let c = 0; c < columns; c++) {
             let tile = document.getElementById(r.toString() + "-" + c.toString());
             updateTile(tile, board[r][c]);
@@ -156,7 +156,26 @@ function slideRight() {
 }
 
 function slideUp() {
-
+    for (let c = 0; c < columns; c++) {
+        let colArr = [];
+        for (let r = 0; r < rows; r++) {
+            colArr.push(board[r][c]);
+        }
+        removeZerosLeftUp(colArr);
+        for (let r = 0; r < rows - 1; r++) {
+            if (colArr[r] == colArr[r + 1]) {
+                colArr[r] *= 3;
+                colArr[r + 1] = 0;
+                r++;
+            }
+        }
+        removeZerosLeftUp(colArr);
+        for (let r = 0; r < rows; r++) {
+            board[r][c] = colArr[r];
+            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            updateTile(tile, board[r][c]);
+        }
+    }
 }
 
 function slideDown() {
