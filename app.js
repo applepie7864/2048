@@ -81,8 +81,40 @@ document.addEventListener("keyup", (e) => {
     }
 })
 
-function slideLeft() {
+function removeZeros(arr) {
+    let nonZeros = []
+    for (let i = 0; i < columns; i++) {
+        if (arr[i] !== 0) {
+            nonZeros.push(arr[i]);
+        }
+    }
+    let len = nonZeros.length;
+    for (let i = 0; i < columns; i++) {
+        if (i >= len) {
+            arr[i] = 0;
+        } else {
+            arr[i] = nonZeros[i];
+        }
+    }
+    return arr;
+}
 
+function slideLeft() {
+    for (let r = 0; r < rows; r++) {
+        removeZeros(board[r]);
+        for (let c = 0; c < columns - 1; c++) {
+            if (board[r][c] == board[r][c + 1]) {
+                board[r][c] *= 3;
+                board[r][c + 1] = 0;
+                c++;
+            }
+        }
+        removeZeros(board[r]);
+        for (let c = 0; c < columns; c++) {
+            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            updateTile(tile, board[r][c]);
+        }
+    }
 }
 
 function slideRight() {
