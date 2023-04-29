@@ -71,29 +71,34 @@ function updateTile(tile, num) {
 document.addEventListener("keyup", (e) => {
     if (e.code == "ArrowLeft") {
         let m = slideLeft();
+        document.getElementsByClassName("score")[0].innerHTML = score.toString();
         setThree(m);
     } else if (e.code == "ArrowRight") {
         let m = slideRight();
+        document.getElementsByClassName("score")[0].innerHTML = score.toString();
         setThree(m);
     } else if (e.code == "ArrowUp") {
         let m = slideUp();
+        document.getElementsByClassName("score")[0].innerHTML = score.toString();
         setThree(m);
     } else if (e.code == "ArrowDown") {
         let m = slideDown();
+        document.getElementsByClassName("score")[0].innerHTML = score.toString();
         setThree(m);
     }
 })
 
 function removeZerosLeftUp(arr) {
     let changes = false;
-    let nonZeros = []
-    for (let i = 0; i < columns; i++) {
+    let nonZeros = [];
+    let length = arr.length;
+    for (let i = 0; i < length; i++) {
         if (arr[i] !== 0) {
             nonZeros.push(arr[i]);
         }
     }
     let len = nonZeros.length;
-    for (let i = 0; i < columns; i++) {
+    for (let i = 0; i < length; i++) {
         if (i >= len) {
             if (arr[i] !== 0) {
                 changes = true;
@@ -112,13 +117,11 @@ function removeZerosLeftUp(arr) {
 function slideLeft() {
     let movement = false;
     for (let r = 0; r < rows; r++) {
-        movement = movement || removeZerosLeftUp(board[r]);
+        movement = removeZerosLeftUp(board[r]) || movement;
         for (let c = 0; c < columns - 1; c++) {
-            if (board[r][c] == 0) {
-                break;
-            }
             if (board[r][c] == board[r][c + 1]) {
                 movement = true;
+                score += board[r][c] * 3;
                 board[r][c] *= 3;
                 board[r][c + 1] = 0;
                 c++;
@@ -135,15 +138,16 @@ function slideLeft() {
 
 function removeZerosRightDown(arr) {
     let changes = false;
-    let nonZeros = []
-    for (let i = 0; i < columns; i++) {
+    let nonZeros = [];
+    let length = arr.length;
+    for (let i = 0; i < length; i++) {
         if (arr[i] !== 0) {
             nonZeros.push(arr[i]);
         }
     }
-    let len = columns - nonZeros.length;
+    let len = length - nonZeros.length;
     let index = 0;
-    for (let i = 0; i < columns; i++) {
+    for (let i = 0; i < length; i++) {
         if (i < len) {
             if (arr[i] !== 0) {
                 changes = true;
@@ -163,13 +167,11 @@ function removeZerosRightDown(arr) {
 function slideRight() {
     let movement = false;
     for (let r = 0; r < rows; r++) {
-        movement = movement || removeZerosRightDown(board[r]);
+        movement = removeZerosRightDown(board[r]) || movement;
         for (let c = columns - 1; c > 0; c--) {
-            if (board[r][c] == 0) {
-                break;
-            }
             if (board[r][c] == board[r][c - 1]) {
                 movement = true;
+                score += board[r][c] * 3;
                 board[r][c] *= 3;
                 board[r][c - 1] = 0;
                 c--;
@@ -191,13 +193,11 @@ function slideUp() {
         for (let r = 0; r < rows; r++) {
             colArr.push(board[r][c]);
         }
-        movement = movement || removeZerosLeftUp(colArr);
+        movement = removeZerosLeftUp(colArr) || movement;
         for (let r = 0; r < rows - 1; r++) {
-            if (colArr[r] == 0) {
-                break;
-            }
             if (colArr[r] == colArr[r + 1]) {
                 movement = true;
+                score += colArr[r] * 3;
                 colArr[r] *= 3;
                 colArr[r + 1] = 0;
                 r++;
@@ -220,13 +220,11 @@ function slideDown() {
         for (let r = 0; r < rows; r++) {
             colArr.push(board[r][c]);
         }
-        movement = movement || removeZerosRightDown(colArr);
+        movement = removeZerosRightDown(colArr) || movement;
         for (let r = rows - 1; r > 0; r--) {
-            if (colArr[r] == 0) {
-                break;
-            }
             if (colArr[r] == colArr[r - 1]) {
                 movement = true;
+                score += colArr[r] * 3;
                 colArr[r] *= 3;
                 colArr[r - 1] = 0;
                 r--;
