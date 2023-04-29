@@ -179,5 +179,24 @@ function slideUp() {
 }
 
 function slideDown() {
-
+    for (let c = 0; c < columns; c++) {
+        let colArr = [];
+        for (let r = 0; r < rows; r++) {
+            colArr.push(board[r][c]);
+        }
+        removeZerosRightDown(colArr);
+        for (let r = rows - 1; r > 0; r--) {
+            if (colArr[r] == colArr[r - 1]) {
+                colArr[r] *= 3;
+                colArr[r - 1] = 0;
+                r--;
+            }
+        }
+        removeZerosRightDown(colArr);
+        for (let r = 0; r < rows; r++) {
+            board[r][c] = colArr[r];
+            let tile = document.getElementById(r.toString() + "-" + c.toString());
+            updateTile(tile, board[r][c]);
+        }
+    }
 }
